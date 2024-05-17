@@ -41,6 +41,20 @@ export function activate(context: vscode.ExtensionContext) {
         }
 	});
 
+	vscode.commands.registerCommand("codelens-sample.codelensSfCommand", (args: any) => {
+		// vscode.window.showInformationMessage(`CodeLens action clicked with args=${args}`);
+		const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            let document = editor.document;
+            const documentText = document.getText();
+			const line = document.lineAt(args);
+			// vscode.window.showInformationMessage(`CodeLens action clicked with args=${line.text}`);
+			let t = vscode.window.activeTerminal ?? vscode.window.createTerminal();
+			t.show(false);
+			t.sendText(`${line.text}`);
+        }
+	});
+
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
