@@ -25,6 +25,7 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 		if (vscode.workspace.getConfiguration("codelens-sample").get("enableCodeLens", true)) {
 			this.createQueryCodeLenses(document);
 			this.createSfCommandCodeLenses(document);
+			this.createTestCodeLensees(document);
 		}
 		return this.codeLenses;
 	}
@@ -35,6 +36,26 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 
 	private createSfCommandCodeLenses(document: vscode.TextDocument) {
 		this.createCodeLenses(document, /^((sf|sfdx) .*)$/gm, 'Execute', 'codelens-sample.codelensSfCommand');
+	}
+
+	private createTestCodeLensees(document: vscode.TextDocument) {
+		const text = document.getText();
+		if (text.startsWith('@IsTest')) {
+			const lineText = document.lineAt(1).text;
+			const className = this.getClassName(lineText);
+			let lensCommand = {
+				title: 'RunTest',
+				command: 'codelens-sample.codelensRunTest',
+				arguments: [className]
+			};
+			this.addCodeLens(new vscode.Range(1, 0, 1, 0), lensCommand);
+		}
+	}
+
+	private getClassName(lineText:string) {
+		const regex = /class\s+(\w+)\s*\{/;
+		const match = lineText.match(regex);
+		return (match && match[1]) ? match[1] : null;
 	}
 
 	private createCodeLenses(document: vscode.TextDocument, regex: RegExp, commandTitle: string, command: string) {
@@ -52,9 +73,13 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 					command: command,
 					arguments: [range.start.line]
 				};
-				let codeLens = new vscode.CodeLens(range, lensCommand);
-				this.codeLenses.push(codeLens);
+				this.addCodeLens(range, lensCommand);
 			}
 		}
+	}
+
+	private addCodeLens(range: vscode.Range, command: vscode.Command) {
+		let codeLens = new vscode.CodeLens(range, command);
+		this.codeLenses.push(codeLens);
 	}
 }

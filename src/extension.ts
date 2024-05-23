@@ -24,34 +24,31 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand("codelens-sample.codelensAction", (args: any) => {
-		// vscode.window.showInformationMessage(`CodeLens action clicked with args=${args}`);
 		const editor = vscode.window.activeTextEditor;
         if (editor) {
             let document = editor.document;
             const documentText = document.getText();
 			const line = document.lineAt(args);
-			// vscode.window.showInformationMessage(`CodeLens action clicked with args=${line.text}`);
-
-			let t = vscode.window.activeTerminal ?? vscode.window.createTerminal();
-			t.show(false);
-			// let t = vscode.window.createTerminal();
-			// new line is added by default to execute
-			// t.sendText(`echo "${line.text}"`);
-			t.sendText(`sfdx force:data:soql:query --query "${line.text}"`);
+			runCommandInTerminal(`sfdx force:data:soql:query --query "${line.text}"`);
         }
 	});
 
 	vscode.commands.registerCommand("codelens-sample.codelensSfCommand", (args: any) => {
-		// vscode.window.showInformationMessage(`CodeLens action clicked with args=${args}`);
 		const editor = vscode.window.activeTextEditor;
         if (editor) {
             let document = editor.document;
             const documentText = document.getText();
 			const line = document.lineAt(args);
-			// vscode.window.showInformationMessage(`CodeLens action clicked with args=${line.text}`);
-			let t = vscode.window.activeTerminal ?? vscode.window.createTerminal();
-			t.show(false);
-			t.sendText(`${line.text}`);
+			runCommandInTerminal(line.text);
+        }
+	});
+
+	vscode.commands.registerCommand("codelens-sample.codelensRunTest", (args: any) => {
+		// vscode.window.showInformationMessage(`CodeLens action clicked with args=${args}`);
+		const editor = vscode.window.activeTextEditor;
+        if (editor) {
+			console.log('LESNY args: '+args);
+			runCommandInTerminal(`sf apex run test --synchronous --class-names ${args}`);
         }
 	});
 
@@ -65,6 +62,12 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+}
+
+function runCommandInTerminal(command: string) {
+	let t = vscode.window.activeTerminal ?? vscode.window.createTerminal();
+	t.show(false);
+	t.sendText(command);
 }
 
 // This method is called when your extension is deactivated
