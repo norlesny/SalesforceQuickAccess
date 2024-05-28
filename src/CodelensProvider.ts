@@ -10,11 +10,6 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 	public readonly onDidChangeCodeLenses: vscode.Event<void> = this._onDidChangeCodeLenses.event;
 
 	constructor() {
-		// this.regex = /^(SELECT.*FROM.*)$/gm;
-		// this.regex = /^(SELECT.*?)\\n\\n/gsm;
-		// this.regex = /^(SELECT.+FROM.+)(\n^$|$(?!\n))/gmsU;
-		// this.regex = /(.+)/g;
-
 		vscode.workspace.onDidChangeConfiguration((_) => {
 			this._onDidChangeCodeLenses.fire();
 		});
@@ -31,11 +26,11 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 	}
 
 	private createQueryCodeLenses(document: vscode.TextDocument) {
-		this.createCodeLenses(document, /^(SELECT.*FROM.*)$/gm, 'Query', 'codelens-sample.codelensAction');
+		this.createCodeLenses(document, /^(SELECT.*FROM.*)$/gm, 'Query', 'salesforce-quickaccess.codelensAction');
 	}
 
 	private createSfCommandCodeLenses(document: vscode.TextDocument) {
-		this.createCodeLenses(document, /^((sf|sfdx) .*)$/gm, 'Execute', 'codelens-sample.codelensSfCommand');
+		this.createCodeLenses(document, /^((sf|sfdx) .*)$/gm, 'Execute', 'salesforce-quickaccess.codelensSfCommand');
 	}
 
 	private createTestCodeLensees(document: vscode.TextDocument) {
@@ -45,7 +40,7 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 			const className = this.getClassName(lineText);
 			let lensCommand = {
 				title: 'RunTest',
-				command: 'codelens-sample.codelensRunTest',
+				command: 'salesforce-quickaccess.codelensRunTest',
 				arguments: [className]
 			};
 			this.addCodeLens(new vscode.Range(1, 0, 1, 0), lensCommand);

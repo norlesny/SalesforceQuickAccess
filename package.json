@@ -14,23 +14,19 @@
   "contributes": {
     "commands": [
       {
-        "command": "salesforcequickaccess.helloWorld",
-        "title": "Hello World"
-      },
-      {
           "title": "Enable CodeLens",
-          "command": "codelens-sample.enableCodeLens",
+          "command": "salesforce-quickaccess.enableCodeLens",
           "category": "CodeLens Sample"
       },
       {
           "title": "Disable Codelens",
-          "command": "codelens-sample.disableCodeLens",
+          "command": "salesforce-quickaccess.disableCodeLens",
           "category": "CodeLens Sample"
       }
     ],
     "configuration": {
         "properties": {
-            "codelens-sample.enableCodeLens": {
+            "salesforce-quickaccess.enableCodeLens": {
                 "type": "boolean",
                 "default": true
             }
