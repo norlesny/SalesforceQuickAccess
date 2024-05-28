@@ -3,13 +3,14 @@
   "displayName": "SalesforceQuickAccess",
   "description": "Helps quickly access common sfdx actions",
   "version": "0.0.1",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.82.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [ "onStartupFinished" ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -58,5 +59,10 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "@vscode/test-electron": "^2.3.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/norlesny/SalesforceQuickAccess.git"
+  },
+  "homepage": "https://github.com/norlesny/SalesforceQuickAccess/blob/main/README.md"
 }
