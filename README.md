@@ -6,7 +6,7 @@ This extensions is ment to help you quickly make use of parts of the Salesforce 
 
 In any file you have opened, this extension will look for SOQL queries or Salesforce CLI commands and create an easy way to run those.
 
-![queryExecute](readme/images/queryExecute.png)
+![queryExecute](https://github.com/norlesny/SalesforceQuickAccess/blob/main/readme/images/queryExecute.png)
 
 ## Requirements
 
