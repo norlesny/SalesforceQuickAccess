@@ -17,16 +17,16 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 
 	public provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
 		this.codeLenses = [];
-		if (vscode.workspace.getConfiguration("codelens-sample").get("enableCodeLens", true)) {
-			this.createQueryCodeLenses(document);
-			this.createSfCommandCodeLenses(document);
-			this.createTestCodeLensees(document);
-		}
+
+		this.createQueryCodeLenses(document);
+		this.createSfCommandCodeLenses(document);
+		// this.createTestCodeLensees(document);
+		
 		return this.codeLenses;
 	}
 
 	private createQueryCodeLenses(document: vscode.TextDocument) {
-		this.createCodeLenses(document, /^(SELECT.*FROM.*)$/gm, 'Query', 'salesforce-quickaccess.codelensAction');
+		this.createCodeLenses(document, /^(SELECT[\s\S]*?(?=FROM).*)$/gmi, 'Query', 'salesforce-quickaccess.codelensAction');
 	}
 
 	private createSfCommandCodeLenses(document: vscode.TextDocument) {
@@ -58,19 +58,22 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 		const text = document.getText();
 		let matches;
 		while ((matches = exp.exec(text)) !== null) {
-			const line = document.lineAt(document.positionAt(matches.index).line);
-			const indexOf = line.text.indexOf(matches[0]);
-			const position = new vscode.Position(line.lineNumber, indexOf);
-			const range = document.getWordRangeAtPosition(position, new RegExp(regex));
+			const position = new vscode.Position(1, 0);
+			const line = document.positionAt(matches.index).line;
+			const range = new vscode.Range(line, 0, line, 0);
 			if (range) {
 				let lensCommand = {
 					title: commandTitle,
 					command: command,
-					arguments: [range.start.line]
+					arguments: [this.removeLineBreaks(matches[0])]
 				};
 				this.addCodeLens(range, lensCommand);
 			}
 		}
+	}
+
+	private removeLineBreaks(input: string): string {
+		return input.replace(/[\r\n]+/g, ' ');
 	}
 
 	private addCodeLens(range: vscode.Range, command: vscode.Command) {

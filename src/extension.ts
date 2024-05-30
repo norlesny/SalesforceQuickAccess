@@ -3,6 +3,7 @@ import { CodelensProvider } from './CodelensProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 
+	vscode.workspace.getConfiguration("salesforce-quickaccess").update("enableCodeLens", true, true);
 	console.log('Congratulations, your extension "salesforcequickaccess" is now active!');
 
 	
@@ -20,20 +21,14 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand("salesforce-quickaccess.codelensAction", (args: any) => {
 		const editor = vscode.window.activeTextEditor;
         if (editor) {
-            let document = editor.document;
-            const documentText = document.getText();
-			const line = document.lineAt(args);
-			runCommandInTerminal(`sfdx force:data:soql:query --query "${line.text}"`);
+			runCommandInTerminal(`sfdx force:data:soql:query --query "${args}"`);
         }
 	});
 
 	vscode.commands.registerCommand("salesforce-quickaccess.codelensSfCommand", (args: any) => {
 		const editor = vscode.window.activeTextEditor;
         if (editor) {
-            let document = editor.document;
-            const documentText = document.getText();
-			const line = document.lineAt(args);
-			runCommandInTerminal(line.text);
+			runCommandInTerminal(args);
         }
 	});
 
