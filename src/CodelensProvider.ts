@@ -21,6 +21,7 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 		this.createQueryCodeLenses(document);
 		this.createSfCommandCodeLenses(document);
 		// this.createTestCodeLensees(document);
+		this.createDeployRetrieveCodeLenses(document);
 		
 		return this.codeLenses;
 	}
@@ -47,7 +48,30 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 		}
 	}
 
-	private getClassName(lineText:string) {
+	private createDeployRetrieveCodeLenses(document: vscode.TextDocument) {
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		const isInWorkspace = workspaceFolders?.some(folder => document.uri.fsPath.startsWith(folder.uri.fsPath) && document.uri.fsPath.replace(folder.uri.fsPath+'\\', '').includes('\\'));
+		if (isInWorkspace) {
+		const filesToIgnore = ['manifest\\readme.txt'];
+			if (filesToIgnore.some(file => document.uri.fsPath.endsWith(file))) {
+				return;
+			}
+			const isManifest = /^.*[\/\\]manifest[\/\\].*\.xml$/gm.test(document.uri.fsPath);
+			this.addTopCodeLens('Deploy', isManifest ? 'sf.deploy.in.manifest' : 'sf.deploy.current.source.file');
+			this.addTopCodeLens('Retrieve', isManifest ? 'sf.retrieve.in.manifest' : 'sf.retrieve.current.source.file');
+		}
+	}
+
+	private addTopCodeLens(title: string, command: string) {
+		let lensCommand = {
+			title: title,
+			command: command,
+			arguments: []
+		};
+		this.addCodeLens(new vscode.Range(0, 0, 0, 0), lensCommand);
+	}
+
+	private getClassName(lineText: string) {
 		const regex = /class\s+(\w+)\s*\{/;
 		const match = lineText.match(regex);
 		return (match && match[1]) ? match[1] : null;
