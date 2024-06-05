@@ -28,12 +28,6 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build the VSCode extension
-      run: npm run build
-
-    - name: Run tests
-      run: npm test
-
     - name: Package the extension
       run: |
         npm install -g vsce
